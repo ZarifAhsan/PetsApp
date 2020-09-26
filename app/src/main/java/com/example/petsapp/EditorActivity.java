@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -86,18 +85,24 @@ public class EditorActivity extends AppCompatActivity {
         String name = mNameEditText.getText().toString().trim();
         String breed = mBreedEditText.getText().toString().trim();
         String weightString = mWeightEditText.getText().toString().trim();
-        int weight = Integer.parseInt(weightString);
 
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, name);
         values.put(PetEntry.COLUMN_PET_BREED, breed);
-        values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
+        values.put(PetEntry.COLUMN_PET_WEIGHT, Integer.parseInt(weightString));
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
-        Toast.makeText(this, "Pet added with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+
+        if (newRowId == -1) {
+            // If the row ID is -1, then there was an error with insertion.
+            Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the insertion was successful and we can display a toast with the row ID.
+            Toast.makeText(this, "Pet saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
