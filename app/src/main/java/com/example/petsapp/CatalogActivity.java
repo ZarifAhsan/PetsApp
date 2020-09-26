@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.petsapp.data.PetDbHelper;
 import com.example.petsapp.data.PetContract.PetEntry;
@@ -59,7 +60,7 @@ public class CatalogActivity extends AppCompatActivity {
      * the pets database.
      */
     @SuppressLint("SetTextI18n")
-    private void displayDatabaseInfo() {
+    public void displayDatabaseInfo() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         // Create and/or open a database to read from it
@@ -91,7 +92,8 @@ public class CatalogActivity extends AppCompatActivity {
 
         long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
 
-        Log.e(LOG_TAG, "New Column: " + newRowId);
+        Toast.makeText(this, "Pet saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+        Log.i(LOG_TAG, "New Column: " + newRowId);
     }
 
     @Override

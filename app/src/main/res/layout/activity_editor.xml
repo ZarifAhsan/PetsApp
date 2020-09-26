@@ -8,18 +8,15 @@
     android:padding="@dimen/activity_margin"
     tools:context=".EditorActivity">
 
-    <!-- Overview category -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- Label -->
         <TextView
             android:text="@string/category_overview"
             style="@style/CategoryStyle" />
 
-        <!-- Input fields -->
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
@@ -28,7 +25,6 @@
             android:orientation="vertical"
             tools:ignore="RtlSymmetry">
 
-            <!-- Name field -->
             <EditText
                 android:id="@+id/edit_pet_name"
                 android:hint="@string/hint_pet_name"
@@ -36,7 +32,6 @@
                 style="@style/EditorFieldStyle"
                 android:autofillHints="" />
 
-            <!-- Breed field -->
             <EditText
                 android:id="@+id/edit_pet_breed"
                 android:hint="@string/hint_pet_breed"
@@ -46,26 +41,22 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Gender category -->
     <LinearLayout
         android:id="@+id/container_gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- Label -->
         <TextView
             android:text="@string/category_gender"
             style="@style/CategoryStyle" />
 
-        <!-- Input field -->
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:orientation="vertical">
 
-            <!-- Gender drop-down spinner -->
             <Spinner
                 android:id="@+id/spinner_gender"
                 android:layout_height="48dp"
@@ -76,27 +67,22 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Measurement category -->
     <LinearLayout
         android:id="@+id/container_measurement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- Label -->
         <TextView
             android:text="@string/category_measurement"
             style="@style/CategoryStyle" />
 
-        <!-- Input fields -->
         <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:paddingStart="4dp"
             tools:ignore="RtlSymmetry">
-
-            <!-- Weight field -->
             <EditText
                 android:id="@+id/edit_pet_weight"
                 android:hint="@string/hint_pet_weight"
@@ -104,7 +90,6 @@
                 style="@style/EditorFieldStyle"
                 android:autofillHints="" />
 
-            <!-- Units for weight (kg) -->
             <TextView
                 android:id="@+id/label_weight_units"
                 android:text="@string/unit_pet_weight"

@@ -3,7 +3,11 @@ package com.example.petsapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,27 +16,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.petsapp.data.PetContract.PetEntry;
+import com.example.petsapp.data.PetDbHelper;
 
 public class EditorActivity extends AppCompatActivity {
 
-    /** EditText field to enter the pet's name */
+    private PetDbHelper mDbHelper;
+
     private EditText mNameEditText;
 
-    /** EditText field to enter the pet's breed */
     private EditText mBreedEditText;
 
-    /** EditText field to enter the pet's weight */
     private EditText mWeightEditText;
 
-    /** EditText field to enter the pet's gender */
     private Spinner mGenderSpinner;
 
-    /**
-     * Gender of the pet. The possible values are:
-     * 0 for unknown gender, 1 for male, 2 for female.
-     */
     private int mGender = PetEntry.GENDER_UNKNOWN;
 
     @Override
@@ -41,11 +41,12 @@ public class EditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_editor);
 
         // Find all relevant views that we will need to read user input from
-        mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
-        mBreedEditText = (EditText) findViewById(R.id.edit_pet_breed);
-        mWeightEditText = (EditText) findViewById(R.id.edit_pet_weight);
-        mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
+        mNameEditText = findViewById(R.id.edit_pet_name);
+        mBreedEditText = findViewById(R.id.edit_pet_breed);
+        mWeightEditText = findViewById(R.id.edit_pet_weight);
+        mGenderSpinner = findViewById(R.id.spinner_gender);
 
+        mDbHelper = new PetDbHelper(this);
         setupSpinner();
     }
 
@@ -88,6 +89,24 @@ public class EditorActivity extends AppCompatActivity {
         });
     }
 
+    private void insertPet() {
+        String name = mNameEditText.getText().toString().trim();
+        String breed = mBreedEditText.getText().toString().trim();
+        String weightString = mWeightEditText.getText().toString().trim();
+        int weight = Integer.parseInt(weightString);
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(PetEntry.COLUMN_PET_NAME, name);
+        values.put(PetEntry.COLUMN_PET_BREED, breed);
+        values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
+        values.put(PetEntry.COLUMN_PET_GENDER, mGender);
+
+        long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
+        Toast.makeText(this, "Pet added with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_editor.xml file.
@@ -102,7 +121,9 @@ public class EditorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                // Do nothing for now
+                insertPet();
+                Intent intent = new Intent(this, CatalogActivity.class);
+                startActivity(intent);
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
