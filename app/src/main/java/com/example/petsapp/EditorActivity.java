@@ -111,11 +111,12 @@ public class EditorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_save:
                 insertPet();
-                Intent intent = new Intent(this, CatalogActivity.class);
-                startActivity(intent);
+                finish();
                 return true;
+
             case R.id.action_delete:
                 return true;
+
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;

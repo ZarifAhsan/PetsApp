@@ -53,6 +53,12 @@ public class CatalogActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayDatabaseInfo();
+    }
+
     @SuppressLint("SetTextI18n")
     public void displayDatabaseInfo() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
