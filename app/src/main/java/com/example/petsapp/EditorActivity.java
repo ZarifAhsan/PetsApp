@@ -97,10 +97,8 @@ public class EditorActivity extends AppCompatActivity {
         long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
 
         if (newRowId == -1) {
-            // If the row ID is -1, then there was an error with insertion.
             Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
         } else {
-            // Otherwise, the insertion was successful and we can display a toast with the row ID.
             Toast.makeText(this, "Pet saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
         }
     }
