@@ -1,4 +1,4 @@
-package com.example.petsapp;
+package com.example.petsapp.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
