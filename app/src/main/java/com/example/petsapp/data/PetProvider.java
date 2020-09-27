@@ -2,6 +2,7 @@ package com.example.petsapp.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -13,6 +14,16 @@ public class PetProvider extends ContentProvider {
     public static final String LOG_TAG = PetProvider.class.getSimpleName();
 
     private PetDbHelper mDbHelper;
+
+    private static final int PETS = 100;
+
+    private static final int PET_ID = 101;
+
+    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    static {
+
+    }
 
     @Override
     public boolean onCreate() {
