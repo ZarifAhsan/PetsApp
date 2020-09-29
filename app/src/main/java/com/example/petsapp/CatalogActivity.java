@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.petsapp.data.PetContract;
 import com.example.petsapp.data.PetDbHelper;
 import com.example.petsapp.data.PetContract.PetEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -61,7 +62,6 @@ public class CatalogActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void displayDatabaseInfo() {
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String[] projection = {
                 PetEntry.COLUMN_ID,
@@ -71,9 +71,16 @@ public class CatalogActivity extends AppCompatActivity {
                 PetEntry.COLUMN_PET_WEIGHT,
         };
 
-        Cursor cursor = db.query(PetEntry.TABLE_NAME, projection, null, null, null, null, null);
+        Cursor cursor = getContentResolver().query(
+                PetContract.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null);
+
         TextView displayView = findViewById(R.id.text_view_pet);
         try {
+            assert cursor != null;
             displayView.setText("The Pet table contains " + cursor.getCount() + " pets.\n");
 
             displayView.append("\n"
@@ -107,6 +114,7 @@ public class CatalogActivity extends AppCompatActivity {
             }
 
         } finally {
+            assert cursor != null;
             cursor.close();
         }
     }
