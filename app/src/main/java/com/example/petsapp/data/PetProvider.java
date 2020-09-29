@@ -115,11 +115,13 @@ public class PetProvider extends ContentProvider {
 
         switch (match) {
             case PETS:
+                assert values != null;
                 return updatePet(uri, values, selection, selectionArgs);
 
             case PET_ID:
                 selection = PetEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                assert values != null;
                 return updatePet(uri, values, selection, selectionArgs);
 
             default:
@@ -134,10 +136,6 @@ public class PetProvider extends ContentProvider {
             if (name == null) {
                 throw new IllegalArgumentException("Pet requires a naem");
             }
-        }
-
-        if (values.containsKey(PetEntry.COLUMN_PET_BREED)) {
-            String breed = values.getAsString(PetEntry.COLUMN_PET_BREED);
         }
 
         if (values.containsKey(PetEntry.COLUMN_PET_GENDER)) {
@@ -161,17 +159,37 @@ public class PetProvider extends ContentProvider {
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-        database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs);
+        return database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs);
+            case PET_ID:
+                selection = PetEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
     }
 
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                return PetEntry.CONTENT_LIST_TYPE;
+            case PET_ID:
+                return PetEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+        }
     }
 }
