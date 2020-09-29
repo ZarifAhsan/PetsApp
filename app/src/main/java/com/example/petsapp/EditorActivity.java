@@ -86,11 +86,12 @@ public class EditorActivity extends AppCompatActivity {
         String name = mNameEditText.getText().toString().trim();
         String breed = mBreedEditText.getText().toString().trim();
         String weightString = mWeightEditText.getText().toString().trim();
+        int weight = Integer.parseInt(weightString);
 
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, name);
         values.put(PetEntry.COLUMN_PET_BREED, breed);
-        values.put(PetEntry.COLUMN_PET_WEIGHT, Integer.parseInt(weightString));
+        values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
 
         Uri newUri = getContentResolver().insert(PetContract.CONTENT_URI, values);
