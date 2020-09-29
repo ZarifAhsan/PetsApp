@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -126,11 +127,7 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
         values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
 
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
-
-        Toast.makeText(this, "Dummy pet added with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+        Uri newUri = getContentResolver().insert(PetContract.CONTENT_URI, values);
     }
 
     @Override
