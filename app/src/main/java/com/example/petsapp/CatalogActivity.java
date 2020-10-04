@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.petsapp.data.PetContract;
@@ -77,45 +78,11 @@ public class CatalogActivity extends AppCompatActivity {
                 null,
                 null);
 
-        TextView displayView = findViewById(R.id.text_view_pet);
-        try {
-            assert cursor != null;
-            displayView.setText("The Pet table contains " + cursor.getCount() + " pets.\n");
+        ListView petListView = findViewById(R.id.list);
 
-            displayView.append("\n"
-                    + PetEntry.COLUMN_ID + " - "
-                    + PetEntry.COLUMN_PET_NAME + " - "
-                    + PetEntry.COLUMN_PET_BREED + " - "
-                    + PetEntry.COLUMN_PET_GENDER + " - "
-                    + PetEntry.COLUMN_PET_WEIGHT + "\n"
-            );
+        PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
 
-            int idColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_ID);
-            int nameColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME);
-            int breedColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED);
-            int genderColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_GENDER);
-            int weightColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT);
-
-            while (cursor.moveToNext()) {
-                int currentId = cursor.getInt(idColumnIndex);
-                String currentPetName = cursor.getString(nameColumnIndex);
-                String currentPetBreed = cursor.getString(breedColumnIndex);
-                int currentPetGender = cursor.getInt(genderColumnIndex);
-                int currentPetWeight = cursor.getInt(weightColumnIndex);
-
-                displayView.append(("\n"
-                        + currentId + " - "
-                        + currentPetName + " - "
-                        + currentPetBreed + " - "
-                        + currentPetGender + " - "
-                        + currentPetWeight
-                        ));
-            }
-
-        } finally {
-            assert cursor != null;
-            cursor.close();
-        }
+        petListView.setAdapter(adapter);
     }
 
     private void insertPet() {
