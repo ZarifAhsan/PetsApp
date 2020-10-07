@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -38,6 +39,15 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        Intent intent = getIntent();
+        Uri currentPetUri = intent.getData();
+
+        if (currentPetUri == null) {
+            setTitle(R.string.editor_activity_title_new_pet);
+        } else {
+            setTitle(R.string.editor_activity_title_edit_pet);
+        }
 
         mNameEditText = findViewById(R.id.edit_pet_name);
         mBreedEditText = findViewById(R.id.edit_pet_breed);
