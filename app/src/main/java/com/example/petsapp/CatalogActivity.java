@@ -1,6 +1,11 @@
 package com.example.petsapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -19,7 +24,11 @@ import com.example.petsapp.data.PetDbHelper;
 import com.example.petsapp.data.PetContract.PetEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class CatalogActivity extends AppCompatActivity {
+public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static int PET_LOADER = 0;
+
+    PetCursorAdapter mCursorAdapter;
 
     public static final String LOG_TAG = CatalogActivity.class.getName();
 
@@ -54,37 +63,11 @@ public class CatalogActivity extends AppCompatActivity {
         View emptyView = findViewById(R.id.empty_view);
         petListView.setEmptyView(emptyView);
 
-    }
+        mCursorAdapter = new PetCursorAdapter(this, null);
+        petListView.setAdapter(mCursorAdapter);
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        displayDatabaseInfo();
-    }
+        getSupportLoaderManager().initLoader(PET_LOADER, null, this);
 
-    @SuppressLint("SetTextI18n")
-    public void displayDatabaseInfo() {
-
-        String[] projection = {
-                PetEntry.COLUMN_ID,
-                PetEntry.COLUMN_PET_NAME,
-                PetEntry.COLUMN_PET_BREED,
-                PetEntry.COLUMN_PET_GENDER,
-                PetEntry.COLUMN_PET_WEIGHT,
-        };
-
-        Cursor cursor = getContentResolver().query(
-                PetContract.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null);
-
-        ListView petListView = findViewById(R.id.list);
-
-        PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
-
-        petListView.setAdapter(adapter);
     }
 
     private void insertPet() {
@@ -108,7 +91,6 @@ public class CatalogActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_insert_dummy_data:
                 insertPet();
-                displayDatabaseInfo();
                 return true;
 
             case R.id.action_delete_all_entries:
@@ -116,5 +98,31 @@ public class CatalogActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        String[] projection = {
+                PetEntry._ID,
+                PetEntry.COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED };
+
+        return new CursorLoader(this,
+                PetContract.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        mCursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        mCursorAdapter.swapCursor(null);
     }
 }

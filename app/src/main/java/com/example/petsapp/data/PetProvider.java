@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 
 import com.example.petsapp.data.PetContract.PetEntry;
 
+import java.util.Objects;
+
 public class PetProvider extends ContentProvider {
 
     public static final String LOG_TAG = PetProvider.class.getSimpleName();
@@ -65,6 +67,8 @@ public class PetProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
+
+        cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
 
         return cursor;
     }
