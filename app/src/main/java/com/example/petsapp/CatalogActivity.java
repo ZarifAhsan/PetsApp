@@ -2,6 +2,7 @@ package com.example.petsapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
@@ -10,6 +11,7 @@ import androidx.loader.content.Loader;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.petsapp.data.PetContract;
 import com.example.petsapp.data.PetDbHelper;
@@ -96,9 +99,36 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         Uri newUri = getContentResolver().insert(PetContract.CONTENT_URI, values);
     }
 
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_all_pets);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteAllPets();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     private void deleteAllPets() {
         int rowsDeleted = getContentResolver().delete(PetContract.CONTENT_URI, null, null);
-        Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
+
+        if (rowsDeleted == 0) {
+            Toast.makeText(this, "No Pet data to delete", Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(this, "All Pets Deleted", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Override
@@ -115,7 +145,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 return true;
 
             case R.id.action_delete_all_entries:
-                deleteAllPets();
+                showDeleteConfirmationDialog();
                 return true;
         }
 
