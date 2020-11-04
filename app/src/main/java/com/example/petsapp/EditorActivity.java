@@ -109,7 +109,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String name = mNameEditText.getText().toString().trim();
         String breed = mBreedEditText.getText().toString().trim();
         String weightString = mWeightEditText.getText().toString().trim();
-        int weight = Integer.parseInt(weightString);
+
+        int weight = 0;
+        if (!TextUtils.isEmpty(weightString)) {
+            weight = Integer.parseInt(weightString);
+        }
+
+        if (mCurrentPetUri == null &&
+                TextUtils.isEmpty(name) &&
+                TextUtils.isEmpty(breed) &&
+                TextUtils.isEmpty(weightString) &&
+                mGender == PetEntry.GENDER_UNKNOWN) {return;}
 
         ContentValues values = new ContentValues();
 
@@ -120,6 +130,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
         if (mCurrentPetUri == null) {
+
             Uri newUri = getContentResolver().insert(PetContract.CONTENT_URI, values);
 
             if (newUri == null) {
