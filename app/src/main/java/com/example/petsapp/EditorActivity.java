@@ -69,6 +69,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         if (mCurrentPetUri == null) {
             setTitle(R.string.editor_activity_title_new_pet);
+            invalidateOptionsMenu();
         } else {
             setTitle(R.string.editor_activity_title_edit_pet);
             getSupportLoaderManager().initLoader(EXISTING_PET_LOADER, null, this);
@@ -232,6 +233,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    @Override
+    public boolean onCreatePanelMenu(int featureId, @NonNull Menu menu) {
+        super.onCreatePanelMenu(featureId, menu);
+
+        if (mCurrentPetUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
     }
 
     private void showUnsavedChangesDialog(
