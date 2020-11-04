@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,6 +96,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         Uri newUri = getContentResolver().insert(PetContract.CONTENT_URI, values);
     }
 
+    private void deleteAllPets() {
+        int rowsDeleted = getContentResolver().delete(PetContract.CONTENT_URI, null, null);
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_catalog, menu);
@@ -109,6 +115,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 return true;
 
             case R.id.action_delete_all_entries:
+                deleteAllPets();
                 return true;
         }
 
